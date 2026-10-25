@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>JeevaDrop</title>
-<link rel="icon" href="jeevadrop.png">
-<link rel="manifest" href="manifest.json">
+<link rel="icon" href="./jeevadrop.png">
+<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#b3122f">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -107,7 +107,99 @@ a{color:var(--teal);font-weight:600}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,220px));gap:12px}
 .gallery figure{margin:0}
 .gallery img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;display:block;background:var(--bg)}
-.gallery figcaption{margin-top:6px;font-size:.9rem;color:var(--mute)}</style>
+.gallery figcaption{margin-top:6px;font-size:.9rem;color:var(--mute)}
+/* =================================
+   JeevaDrop Automatic Light & Dark Mode
+================================= */
+
+/* Light Mode */
+:root {
+  color-scheme: light;
+  --page-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #17212b;
+  --muted-color: #64748b;
+  --border-color: #dbe3ea;
+  --input-bg: #ffffff;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page-bg: #101820;
+    --card-bg: #1c2933;
+    --text-color: #f1f5f9;
+    --muted-color: #b8c4d0;
+    --border-color: #344451;
+    --input-bg: #111a22;
+  }
+}
+
+/* Apply theme */
+body {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6,
+p, label, span, li {
+  color: inherit;
+}
+
+/* Cards and sections */
+.card, section, article,
+.panel, .form-card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+/* Input fields */
+input, select, textarea {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted-color);
+}
+
+/* Descriptions */
+header p,
+.brand-tagline,
+small {
+  color: var(--muted-color);
+}
+
+/* Links */
+a {
+  color: #c0264b;
+}
+
+@media (prefers-color-scheme: dark) {
+  a {
+    color: #ff8da5;
+  }
+}
+
+/* Logo stays visible */
+.brand-logo {
+  background-color: #ffffff;
+  border-radius: 12px;
+}
+
+/* Buttons */
+button {
+  color: var(--text-color);
+}
+
+/* Smooth theme transition */
+body, section, article, input, select, textarea {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}</style>
 </head>
 <body>
 <div class="wrap">
@@ -116,8 +208,8 @@ a{color:var(--teal);font-weight:600}
   <img src="jeevadrop.png" alt="JeevaDrop: Every Drop Creates Hope" class="brand-logo">
   <h1 class="sr">JeevaDrop</h1>
   <div style="font-family: sans-serif;text-align: left;">
-  <h1 style="font-size: 3rem;margin: 0 0 10px 0;color: #000;">JeevaDrop</h1>
-  <p style="color: rgb(115, 77, 146);font-size: 16px;margin-top: 5px;">"A single drop can restart a heartbeat.Experiance the power of giving with JeevaDrop</p></div>
+  <h1 style="font-size: 3rem;margin: 0 0 10px 0;color: var(--ink);">JeevaDrop</h1>
+  <p style="color: var(--mute);font-size: 16px;margin-top: 5px;">"A single drop can restart a heartbeat.Experiance the power of giving with JeevaDrop</p></div>
   </h1>
 </header>
   <p>Search donors and blood banks by blood group and city, post an emergency request, or register to donate.</p>
@@ -266,7 +358,7 @@ const G=['A+','A-','B+','B-','AB+','AB-','O+','O-'];
 const CAN={'O-':['O-'],'O+':['O-','O+'],'A-':['A-','O-'],'A+':['A+','A-','O+','O-'],'B-':['B-','O-'],'B+':['B+','B-','O+','O-'],'AB-':['A-','B-','AB-','O-'],'AB+':G};
 let S={donors:[],banks:[],reqs:[]};
 let me=null;
-const api=async(p,m='GET',b)=>{const r=await fetch('/api/'+p,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||'Request failed')}return r.json()};
+const api=async(p,m='GET',b)=>{const r=await fetch('https://jeevadrop-backend.onrender.com/api/'+p,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||'Request failed')}return r.json()};
 const load=async()=>{[S.donors,S.banks,S.reqs]=await Promise.all([api('donors'),api('banks'),api('requests')]);badge()};
 const loadMe=async()=>{me=(await api('me')).user};
 const $=id=>document.getElementById(id);
